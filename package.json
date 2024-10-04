@@ -1,0 +1,24 @@
+{
+  "name": "luizalabs-backend",
+  "version": "1.0.0",
+  "description": "Backend para desafio técnico da Luizalabs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aferreirasv/luizalabs-backend.git"
+  },
+  "author": "Alan Ferreira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aferreirasv/luizalabs-backend/issues"
+  },
+  "homepage": "https://github.com/aferreirasv/luizalabs-backend#readme",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.10"
+  }
+}
