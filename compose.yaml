@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    container_name: luizalabs-backend
+    ports:
+      - "8000:8000"
+  db:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db

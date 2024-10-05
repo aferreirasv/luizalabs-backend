@@ -1,9 +1,8 @@
-const Hapi = require('@hapi/hapi')
+import * as Hapi from '@hapi/hapi'
 
 const init = async () => {
     const server = Hapi.server({
-        port: 3000, 
-        host: 'localhost'
+        port: 8000
     })
 
     server.route({
