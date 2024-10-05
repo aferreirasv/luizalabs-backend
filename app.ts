@@ -1,26 +1,3 @@
-import * as Hapi from '@hapi/hapi'
-
-const init = async () => {
-    const server = Hapi.server({
-        port: 8000
-    })
-
-    server.route({
-        method: 'GET',
-        path: '/',
-        handler: (request, h) => {
-            return 'Hello World!'
-        }
-    })
-    await server.start()
-    console.log("Server running on %s", server.info.uri)
-
-}
-
-process.on('unhandleRejection', (err) => {
-
-    console.log(err)
-    process.exit(1)
-})
+import {init} from './src/adapters/http/server'
 
 init()

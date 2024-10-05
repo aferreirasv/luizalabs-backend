@@ -5,8 +5,8 @@ services:
     ports:
       - "8000:8000"
   db:
-    image: postgres
-    container_name: postgres
+    image: mongodb
+    container_name: mongodb
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
