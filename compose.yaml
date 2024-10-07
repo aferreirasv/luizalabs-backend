@@ -5,9 +5,9 @@ services:
     ports:
       - "8000:8000"
   db:
-    image: mongodb
+    image: bitnami/mongodb
     container_name: mongodb
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: db
+      MONGODB_ROOT_USERNAME: dev
+      MONGODB_ROOT_PASSWORD: pass123
+      MONGODB_DATABASE: db

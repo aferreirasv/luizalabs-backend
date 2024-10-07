@@ -3,7 +3,7 @@ import * as Hapi from '@hapi/hapi'
 import orderRoutes from './order/router'
 export const init = async () => {
     const server = Hapi.server({
-        port: 8090,
+        port: 8000,
         host: "localhost"
     })
    
