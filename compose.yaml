@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    container_name: luizalabs-backend
+    ports:
+      - "8000:8000"
+  db:
+    image: bitnami/mongodb
+    container_name: mongodb
+    environment:
+      MONGODB_ROOT_USERNAME: dev
+      MONGODB_ROOT_PASSWORD: pass123
+      MONGODB_DATABASE: db
