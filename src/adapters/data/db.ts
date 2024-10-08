@@ -4,7 +4,7 @@ import Order from '../../domain/order'
 export default class Client {
 
     prisma: PrismaClient = new PrismaClient()
-
+    
     async getOrder() : Promise<Order | null> {
 
 
@@ -22,7 +22,7 @@ export default class Client {
         try{
             const res = await this.prisma.order.create({data: order as Prisma.OrderCreateInput})
             console.log("src/adapters/data/db:24",res)
-            return order
+            return res as Order
         } catch(e: any) {
             return e
         }
