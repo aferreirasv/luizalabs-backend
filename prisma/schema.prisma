@@ -23,10 +23,10 @@ model Order {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
   customer  String
   status    String
-  date      String
+  date      DateTime
   cart      Product[]
   subtotal  Float
-  shipping  Float?
+  shipping  Float
   total     Float
 }
 

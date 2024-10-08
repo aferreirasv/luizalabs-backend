@@ -1,33 +1,38 @@
-import { listOrder, listOrders } from "./get"
-import { ServerRoute } from "@hapi/hapi";
+import { ServerRoute,Request, ResponseToolkit,ResponseObject } from "@hapi/hapi";
+import Service from '../../../domain/service'
+import OrderHandler from './handler'
+import Order from '../../../domain/order'
+import { Server } from "http";
 
+export default class OrderRouter{
 
-const orderRoutes: ServerRoute[] = [
-    {
-        method: "GET",
-        path: "/orders/{id}",
-        handler: listOrder
-    },
-    {
-        method: "GET",
-        path: "/orders",
-        handler: listOrders
-    },
-    {
-        method: "POST",
-        path: "/orders",
-        handler: (r,h) => {return}
-    },
-    {   
-        method: "PUT",
-        path: "/orders/{id}",
-        handler: (r,h)=>{return}
-    },
-    {
-        method: "DELETE",
-        path: "/orders/{id}",
-        handler: (r,h)=>{return}
+    static getRoutes(handler: OrderHandler): ServerRoute[] {
+        return [
+            {
+                method: "GET",
+                path: "/orders/{id}",
+                handler: handler.getOrder.bind(handler)
+            },
+            {
+                method: "GET",
+                path: "/orders",
+                handler: handler.listOrders.bind(handler)
+            },
+            // {
+            //     method: "POST",
+            //     path: "/orders",
+            //     handler: (r,h)=>{return}
+            // },
+            // {   
+            //     method: "PUT",
+            //     path: "/orders/{id}",
+            //     handler: (r,h)=>{return}
+            // },
+            // {
+            //     method: "DELETE",
+            //     path: "/orders/{id}",
+            //     handler: (r,h)=>{return}
+            // }
+        ]
     }
-]
-
-export default orderRoutes
+}
