@@ -3,11 +3,16 @@ services:
     build: .
     container_name: luizalabs-backend
     ports:
-      - "8000:8000"
+      - 8000:8000
   db:
-    image: bitnami/mongodb
+    image: prismagraphql/mongo-single-replica:5.0.3
     container_name: mongodb
+    ports:
+      - 27017:27017
     environment:
-      MONGODB_ROOT_USERNAME: dev
-      MONGODB_ROOT_PASSWORD: pass123
-      MONGODB_DATABASE: db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: prisma
+      MONGO_INITDB_DATABASE: db
+      INIT_WAIT_SEC: 3
+    volumes:
+     - ./initMongo.js:/docker-entrypoint-initdb.d/initMongo.js:ro

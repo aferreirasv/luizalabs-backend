@@ -10,6 +10,7 @@ export default class Server {
     
     service: Service
     server: Hapi.Server<Hapi.ServerApplicationState>
+    orderHandler: OrderHandler
 
     constructor(service : Service) {
         this.service = service
@@ -17,6 +18,7 @@ export default class Server {
             port: 8000,
             host: "localhost"
         })
+        this.orderHandler = new OrderHandler(service)
     }  
 
     async init() {
@@ -26,17 +28,7 @@ export default class Server {
             return h.continue
         })
     
-        this.server.route({
-            method: "GET",
-            path: "/orders/{id}",
-            handler: this.getOrder.bind(this)
-        },
-        // {
-        //     method: "GET",
-        //     path: "/orders",
-        //     handler: handler.listOrders
-        // }
-    )
+        this.server.route(OrderRouter.getRoutes(this.orderHandler))
         
         await this.server.start()
         console.log("Server running on %s", this.server.info.uri)

@@ -10,6 +10,11 @@ export default class OrderRouter{
         return [
             {
                 method: "GET",
+                path: "/",
+                handler: (r,h)=> (h.response("Application is healthy"))
+            },
+            {
+                method: "GET",
                 path: "/orders/{id}",
                 handler: handler.getOrder.bind(handler)
             },
@@ -18,11 +23,11 @@ export default class OrderRouter{
                 path: "/orders",
                 handler: handler.listOrders.bind(handler)
             },
-            // {
-            //     method: "POST",
-            //     path: "/orders",
-            //     handler: (r,h)=>{return}
-            // },
+            {
+                method: "POST",
+                path: "/orders",
+                handler: handler.createOrder.bind(handler)
+            },
             // {   
             //     method: "PUT",
             //     path: "/orders/{id}",

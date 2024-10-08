@@ -1,8 +1,8 @@
 
 enum Status {
-    PENDENTE,
-    ENVIADO,
-    ENTREGUE,
-    
+    PENDENTE = "PENDENTE",
+    ENVIADO = "ENVIADO",
+    ENTREGUE = "ENTREGUE",  
 }
+
 export default Status
