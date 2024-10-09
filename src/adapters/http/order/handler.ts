@@ -14,18 +14,21 @@ export default class OrderHandler {
     }
 
     async getOrder(request: Request, h: ResponseToolkit): Promise<ResponseObject> {
-        console.log(request.params)
         const res = await this.service.getOrder(request.params.id)
         if(res == null){
             return h.response().code(404)
         }
-        return h.response(res)
+        return h.response(<IListOrder>res)
     }
 
 
     
     async listOrders(request: Request,h: ResponseToolkit): Promise<ResponseObject> {
-        return h.response("Listing all orders")
+        const res = await this.service.listOrders(parseInt(request.query.page), parseInt(request.query.amount))
+        if(res == null) {
+            return h.response().code(404)
+        }
+        return h.response({data: {page: request.query.page, orders: <IListOrder[]>res}})
     }
     
     async createOrder(request: Request, h:ResponseToolkit): Promise<ResponseObject> {
@@ -34,7 +37,7 @@ export default class OrderHandler {
             const order = new Order(customer, status, cart, shipping)
             const res = await this.service.createOrder(order)
             console.log(res)
-            return h.response("Order created sucessfully")
+            return h.response(<IListOrder>res)
         }
         return h.response().code(400)
     }
@@ -54,4 +57,15 @@ interface IPostOrder {
     status: string
     cart: Product[]
     shipping: number
+}
+
+interface IListOrder {
+    id: string
+    customer: string
+    status: Status
+    date: Date
+    cart: Product[]
+    shipping: number
+    subtotal: number
+    total: number
 }

@@ -21,16 +21,27 @@ export default class Client {
     async createOrder(order: Order): Promise<Order> {
         try{
             const res = await this.prisma.order.create({data: order as Prisma.OrderCreateInput})
-            console.log("src/adapters/data/db:24",res)
             return res as Order
         } catch(e: any) {
             return e
         }
     }
 
-    async listOrders(): Promise<Order[]> {
-
-        return new Array<Order>()
+    async listOrders(page: number, amount: number): Promise<Order[]> {
+        try {
+            console.log('page', page, 'amount', amount)
+            const res =  await this.prisma.order.findMany(
+                {
+                    skip: ((page - 1) * amount), 
+                    take: amount
+                }
+            )
+            return res.map(order => new Order(order.customer, order.status, order.cart,order.shipping, order.id, order.date))
+        } catch (e: any) {
+            console.error(e)
+            return e
+        }
     }
 
 }
+

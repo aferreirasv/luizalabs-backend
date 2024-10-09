@@ -12,6 +12,10 @@ export default class Service {
         return this.orderRepository.getOrder(id)
     }
 
+    listOrders(page: number, amount: number = 3): Promise<Order[]> {
+        return this.orderRepository.listOrders(page, amount)
+    }
+
     createOrder(order: Order): Promise<Order> | Error {
         try {
 
