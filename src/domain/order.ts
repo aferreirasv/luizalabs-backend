@@ -12,22 +12,23 @@ export default class Order {
     total?: number
 
     constructor(
-        id: string, customer: string, status: string,
-        date : Date, cart: Product[], subtotal: number, 
-        shipping: number, total: number
+        customer: string, status: string,
+        cart: Product[], 
+        shipping: number, id?: string, date?: Date
     ){
         this.id = id
         this.customer = customer
         this.status = Status[status as keyof typeof Status]
         this.date = date
         this.cart = cart
-        this.subtotal = subtotal
         this.shipping = shipping
-        this.total = total
+        this.init()
     }
 
     init() {
-        this.date = new Date()
+        if(!this.date) {
+            this.date = new Date()
+        }
         this.calculatePrices()
     }
 

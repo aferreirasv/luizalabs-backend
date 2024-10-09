@@ -4,7 +4,7 @@ import Order from '../../domain/order'
 export default class Client {
 
     prisma: PrismaClient = new PrismaClient()
-
+    
     async getOrder() : Promise<Order | null> {
 
 
@@ -13,43 +13,35 @@ export default class Client {
                 if (res == null) {
                     return null
                 }
-                return new Order(res.id, res.customer, res.status, res.date, res.cart, res.subtotal, res.shipping, res.total)
+                return new Order(res.customer,res.status,res.cart, res.shipping,res.id,res.date)
             }
         )
     }
 
     async createOrder(order: Order): Promise<Order> {
-        return order
+        try{
+            const res = await this.prisma.order.create({data: order as Prisma.OrderCreateInput})
+            return res as Order
+        } catch(e: any) {
+            return e
+        }
     }
 
-    async listOrders(): Promise<Order[]> {
-
-        return new Array<Order>()
+    async listOrders(page: number, amount: number): Promise<Order[]> {
+        try {
+            console.log('page', page, 'amount', amount)
+            const res =  await this.prisma.order.findMany(
+                {
+                    skip: ((page - 1) * amount), 
+                    take: amount
+                }
+            )
+            return res.map(order => new Order(order.customer, order.status, order.cart,order.shipping, order.id, order.date))
+        } catch (e: any) {
+            console.error(e)
+            return e
+        }
     }
 
 }
 
-
-    // await prisma.order.create({
-    //     data: {
-    //       id: '1',
-    //       customer: 'Alan Ferreira',
-    //       status: 'pendente',
-    //       date: '2024-10-07',
-    //       cart: [
-    //         {
-    //             name: 'Aspirador de Pó Vertical e Portátil',
-    //             price: 180.90,
-    //             amount: 3
-    //         },
-    //         {
-    //             name: 'Ventilador Turbo 5 Velocidades',
-    //             price: 499.90,
-    //             amount: 1
-    //         }
-    //       ],
-    //       subtotal: 1042.60,
-    //       shipping: 40,
-    //       total: 1082.60
-    //     },
-    //   })
