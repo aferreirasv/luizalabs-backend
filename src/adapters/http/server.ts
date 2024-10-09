@@ -16,7 +16,14 @@ export default class Server {
         this.service = service
         this.server = Hapi.server({
             port: 8000,
-            host: "localhost"
+            host: "localhost",
+            "routes":{
+                "cors": {
+                    "origin": ["*"],
+                    "headers": ["Accept", "Content-Type"],
+                    "additionalHeaders": ["X-Requested-With"]
+                }
+            }
         })
         this.orderHandler = new OrderHandler(service)
     }  
