@@ -1,4 +1,5 @@
 import Order from './order'
+import OrderPage from './orderPage'
 import OrderRepository from './orderRepository'
 
 export default class Service {
@@ -12,7 +13,7 @@ export default class Service {
         return this.orderRepository.getOrder(id)
     }
 
-    listOrders(page: number, amount: number = 3): Promise<Order[]> {
+    listOrders(page: number, amount: number = 3): Promise<OrderPage> {
         return this.orderRepository.listOrders(page, amount)
     }
 

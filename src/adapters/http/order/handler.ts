@@ -25,10 +25,10 @@ export default class OrderHandler {
     
     async listOrders(request: Request,h: ResponseToolkit): Promise<ResponseObject> {
         const res = await this.service.listOrders(parseInt(request.query.page), parseInt(request.query.amount))
-        if(res == null) {
+        if(res.orders == null) {
             return h.response().code(404)
         }
-        return h.response({data: {page: request.query.page, orders: <IListOrder[]>res}})
+        return h.response(<IListOrderPage>res)
     }
     
     async createOrder(request: Request, h:ResponseToolkit): Promise<ResponseObject> {
@@ -68,4 +68,9 @@ interface IListOrder {
     shipping: number
     subtotal: number
     total: number
+}
+
+interface IListOrderPage {
+    count: number
+    orders: IListOrder[]
 }

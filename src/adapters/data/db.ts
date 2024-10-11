@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 import Order from '../../domain/order'
+import OrderPage from '../../domain/orderPage'
 
 export default class Client {
 
@@ -27,16 +28,21 @@ export default class Client {
         }
     }
 
-    async listOrders(page: number, amount: number): Promise<Order[]> {
+    async listOrders(page: number, amount: number): Promise<OrderPage> {
         try {
-            console.log('page', page, 'amount', amount)
-            const res =  await this.prisma.order.findMany(
-                {
+            const [orders, count] = await this.prisma.$transaction([
+                this.prisma.order.findMany({
                     skip: ((page - 1) * amount), 
                     take: amount
-                }
+                }),
+                this.prisma.order.count()
+              ]);
+
+            return <OrderPage>({
+                count: count,
+                orders: orders.map(order => new Order(order.customer, order.status, order.cart,order.shipping, order.id, order.date))
+            }
             )
-            return res.map(order => new Order(order.customer, order.status, order.cart,order.shipping, order.id, order.date))
         } catch (e: any) {
             console.error(e)
             return e
@@ -44,4 +50,3 @@ export default class Client {
     }
 
 }
-
