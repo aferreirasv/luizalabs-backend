@@ -1,43 +1,35 @@
-import { ServerRoute,Request, ResponseToolkit,ResponseObject } from "@hapi/hapi";
-import Service from '../../../domain/service'
 import OrderHandler from './handler'
-import Order from '../../../domain/order'
-import { Server } from "http";
+import { ServerRoute } from '@hapi/hapi'
 
-export default class OrderRouter{
+export default class OrederRouter {
 
-    static getRoutes(handler: OrderHandler): ServerRoute[] {
+    getRoutes(handler: OrderHandler) : ServerRoute[] { 
         return [
             {
-                method: "GET",
-                path: "/",
-                handler: (r,h)=> (h.response("Application is healthy"))
-            },
-            {
-                method: "GET",
-                path: "/orders/{id}",
+                method: 'GET',
+                path: '/orders/{id}',
                 handler: handler.getOrder.bind(handler)
             },
             {
-                method: "GET",
-                path: "/orders",
+                method: 'GET',
+                path: '/orders',
                 handler: handler.listOrders.bind(handler)
             },
             {
-                method: "POST",
-                path: "/orders",
+                method: 'POST',
+                path: '/orders',
                 handler: handler.createOrder.bind(handler)
             },
-            // {   
-            //     method: "PUT",
-            //     path: "/orders/{id}",
-            //     handler: (r,h)=>{return}
-            // },
-            // {
-            //     method: "DELETE",
-            //     path: "/orders/{id}",
-            //     handler: (r,h)=>{return}
-            // }
+            {   
+                method: 'PUT',
+                path: '/orders/{id}',
+                handler: handler.putOrder.bind(handler)
+            },
+            {
+                method: 'DELETE',
+                path: '/orders/{id}',
+                handler: handler.deleteOrder.bind(handler)
+            }
         ]
     }
 }

@@ -1,65 +1,40 @@
 import * as Hapi  from '@hapi/hapi'
-
-import OrderRouter from './order/router'
+import OrderRouter from './order/router'    
 import OrderHandler from './order/handler'
-
-import Service from '../../domain/service'
-
+import OrderService from '../../domain/order/service'
 
 export default class Server {
-    
-    service: Service
-    server: Hapi.Server<Hapi.ServerApplicationState>
     orderHandler: OrderHandler
-
-    constructor(service : Service) {
-        this.service = service
-        this.server = Hapi.server({
-            port: 8000,
-            host: "localhost",
-            "routes":{
-                "cors": {
-                    "origin": ["*"],
-                    "headers": ["Accept", "Content-Type"],
-                    "additionalHeaders": ["X-Requested-With"]
+    orderRouter: OrderRouter
+    app: Hapi.Server<Hapi.ServerApplicationState>
+    
+    constructor(service: OrderService) {
+        this.orderHandler = new OrderHandler(service)
+        this.orderRouter = new OrderRouter()
+        this.app = Hapi.server({
+            routes:{
+                cors: {
+                    origin: ['*'],
+                    headers: ['Accept', 'Content-Type'],
+                    additionalHeaders: ['X-Requested-With']
                 }
             }
         })
-        this.orderHandler = new OrderHandler(service)
-    }  
-
-    async init() {
-        console.log({this: this, getOrder: this.getOrder})
-        this.server.ext('onRequest', (request, h) => {
+        this.app.route(this.orderRouter.getRoutes(this.orderHandler))
+        this.app.ext('onRequest', (request, h) => {
             console.log(`${request.method.toUpperCase()} ${request.path}`)
             return h.continue
         })
+    }
     
-        this.server.route(OrderRouter.getRoutes(this.orderHandler))
-        
-        await this.server.start()
-        console.log("Server running on %s", this.server.info.uri)
-    }
+    async listen(port: string | number, host?: string) {
+        this.app.settings.host = host || '0.0.0.0'
+        this.app.settings.port = port
 
-    async getOrder(request: Hapi.Request, h: Hapi.ResponseToolkit): Promise<Hapi.ResponseObject> {
-        console.log(request.params)
-        try {
-            const res = await this.service.getOrder(request.params.id)
-            if(res == null){
-                console.log("Not Found")
-                return h.response().code(404)
-            }
-            return h.response(res)
-        } catch(e: any) {
-            console.error(e)
-            return h.response(e).code(500)
-        }
+        console.log(this.app.settings)
         
+        await this.app.start()
+        console.log('Server running one %s', this.app.info.uri) 
     }
-
+    
 }
-
-process.on('unhandleRejection', (err) => {
-    console.log(err)
-    process.exit(1)
-})

@@ -1,24 +1,27 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import Order from '../../domain/order'
-import OrderPage from '../../domain/orderPage'
+import {Order,Orders} from '../../domain/order/interfaces'
 
-export default class Client {
-
-    prisma: PrismaClient = new PrismaClient()
+export default class DBClient {
     
-    async getOrder() : Promise<Order | null> {
-
-
-        return this.prisma.order.findFirst().then(
-            res => {
-                if (res == null) {
-                    return null
-                }
-                return new Order(res.customer,res.status,res.cart, res.shipping,res.id,res.date)
-            }
-        )
+    prisma: PrismaClient
+    
+    constructor() {
+        this.prisma = new PrismaClient()
     }
 
+    async getOrder(id: string) : Promise<Order | null> {
+        try{
+            
+            const res = await this.prisma.order.findUnique({
+                where: {id: id}
+            })
+            return res as Order
+        }
+        catch(e: any) {
+            return e
+        }
+    }
+    
     async createOrder(order: Order): Promise<Order> {
         try{
             const res = await this.prisma.order.create({data: order as Prisma.OrderCreateInput})
@@ -27,8 +30,8 @@ export default class Client {
             return e
         }
     }
-
-    async listOrders(page: number, amount: number): Promise<OrderPage> {
+    
+    async listOrders(page: number, amount: number): Promise<Orders> {
         try {
             const [orders, count] = await this.prisma.$transaction([
                 this.prisma.order.findMany({
@@ -36,17 +39,37 @@ export default class Client {
                     take: amount
                 }),
                 this.prisma.order.count()
-              ]);
-
-            return <OrderPage>({
+            ]);
+            
+            return <Orders>({
                 count: count,
-                orders: orders.map(order => new Order(order.customer, order.status, order.cart,order.shipping, order.id, order.date))
+                orders: orders.map((order: any) =>  <Order>order)
             }
-            )
-        } catch (e: any) {
+        )
+    } catch (e: any) {
+        console.error(e)
+        return e
+    }
+    }
+
+    async deleteOrder(order: string): Promise<Order> {
+        try {
+            const res = await this.prisma.order.delete({ where: { id: order } })
+            return res as unknown as Order
+        }
+        catch(e: any) {
             console.error(e)
             return e
         }
     }
 
+    async putOrder(order: Order) : Promise<Order>{ 
+        try{
+            const {['id']: _,...payload} = order
+            const res = await this.prisma.order.update({where: {id: order.id}, data: payload})
+            return res as Order
+        } catch(e: any) {
+            return e
+        }
+    }
 }
