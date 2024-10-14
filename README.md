@@ -22,6 +22,34 @@ Para iniciar a aplicação, utilize o seguinte comando:
 
 Este comando irá construir todos os contêineres definidos no arquivo compose.dev.yaml e iniciá-los em segundo plano.
 
+#### Seed
+
+Devido ao curto prazo, não consegui fazer um seed para o banco a tempo, então aqui está um exemplo de post para popular o banco.
+
+```
+curl --location 'http://localhost:8000/orders' \
+--header 'Content-Type: application/json' \
+--data '{
+    "cart": [
+        {
+            "name": "Ventilador turbo 5 velocidades",
+            "price": 200,
+            "amount": 5
+        },
+        {
+            "name": "Aspirador de pó vertical e portátil",
+            "price": 100,
+            "amount": 3
+        }
+    ],
+    "customer": "Alan Ferreira",
+    "shipping": 30,
+    "status": "PENDENTE",
+    "date": "2024-10-14T17:47:05.506Z"
+
+}'
+```
+
 ## Executando Testes
 
 A aplicação possui três scripts diferentes que podem ser executados para rodas os testes.
