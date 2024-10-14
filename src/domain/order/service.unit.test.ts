@@ -6,7 +6,7 @@ import { mock } from 'node:test';
 import { create } from 'domain';
 
 const mockOrder = {
-    'id': '1a4a238f-4631-49d2-9a2d-09d4e8b58980',
+    'id': '6706d7bd2a51ec575894fb49',
     'customer': 'Alan Ferreira',
     'status': Status.PENDENTE,
     'date': new Date('2024-10-09T19:21:33.400Z'),
@@ -27,7 +27,7 @@ const mockOrder = {
     'total': 80
 }
 
-const mockOrderRepository = (mockFn: any) => ({
+const mockOrderRepository = (mockFn?: any) => ({
     createOrder:    jest.fn(mockFn),
     listOrders: jest.fn(mockFn),
     getOrder: jest.fn(mockFn),
@@ -165,7 +165,7 @@ describe ('createOrder', () => {
         try {
             const result = await service.createOrder(<Order>createModel)
         } catch (e: any) {
-            expect(e.message).toBe("Order pricing is inconsistent.")
+            expect(e.message).toBe('Order pricing is inconsistent.')
         }
     })
 })
@@ -204,7 +204,7 @@ describe('putOrder', () => {
         try {
             const result = await service.putOrder(updateModel)
         } catch (e: any) {
-            expect(e.message).toBe("Order pricing is inconsistent.")
+            expect(e.message).toBe('Order pricing is inconsistent.')
         }
     })
 })

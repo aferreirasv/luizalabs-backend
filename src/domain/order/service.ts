@@ -56,7 +56,7 @@ export default class OrderService {
             this.setPrices(order,prices)
         }
         if (order.subtotal != prices.subtotal || order.total != prices.total) {
-            throw new Error("Order pricing is inconsistent.")
+            throw new Error('Order pricing is inconsistent.')
         }
         this.setPrices(order,<Pricing>order)
     }

@@ -1,8 +1,8 @@
 import { Request, ResponseToolkit,ResponseObject } from '@hapi/hapi';
 import {Order} from '../../../domain/order/interfaces'
 import { PutOrderResponse, GetOrderResponse, ListOrdersResponse, PostOrderResponse } from './response';
-import OrderService from '../../../domain/order/service';
 import { createOrderSchema, putOrderSchema } from './validator'
+import { OrderService } from './interfaces'
 
 
 export default class OrderHandler {
@@ -16,20 +16,20 @@ export default class OrderHandler {
     async getOrder(request: Request, h: ResponseToolkit): Promise<ResponseObject> {
         const res = await this.service.getOrder(request.params.id)
         if(res == null){
-            return h.response('Order not found').code(404)
+            return h.response().code(404)
         }
         return h.response(<GetOrderResponse>res)
     }
     
 
     async listOrders(request: Request,h: ResponseToolkit): Promise<ResponseObject> {
-        const page = parseInt(request.query.page)
+        const page = parseInt(request.query.page) || 1
         const amount = parseInt(request.query.amount) || 3
         const res = await this.service.listOrders(page,amount)
-        if(res.orders == null) {
-            return h.response('No orders were found').code(404)
+        if(res.orders.length == 0) {
+            return h.response().code(204)
         }
-        return h.response(<ListOrdersResponse[]>res.orders).header('Content-Range', `${(page - 1)*amount}-${page*amount - 1}/${res.count} `)
+        return h.response(<ListOrdersResponse[]>res.orders).header('X-Total-Count', res.count.toString())
     }
     
 
@@ -42,10 +42,10 @@ export default class OrderHandler {
         const order: Order = <Order>value
         try {
             const res = await this.service.createOrder(order)
-            return h.response(<PostOrderResponse>res)
+            return h.response(<PostOrderResponse>res).code(201)
         } catch (e: any) {
             console.error(e.message)
-            return h.response('Internal server error').code(500)
+            return h.response().code(500)
         }
     }
     
@@ -56,7 +56,7 @@ export default class OrderHandler {
             return h.response(order)
         }
         catch(e: any) {
-            return h.response('Order was not found').code(404)
+            return h.response().code(404)
         }
     }
     
@@ -66,14 +66,13 @@ export default class OrderHandler {
         if (error) {
             return h.response({message: error.message}).code(400)
         }
-
         try {
             const order: Order = <Order>value
             const res = await this.service.putOrder(order)
             return h.response(<PutOrderResponse>res)
         } catch (e: any) {
-            console.error(e)
-            return h.response('Internal server error').code(500)
+            console.error(e.message)
+            return h.response().code(404)
         }
     }
 
