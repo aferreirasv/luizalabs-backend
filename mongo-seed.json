@@ -1,0 +1,23 @@
+[
+    {
+        "id": "6706d7bd2a51ec575894fb49",
+        "customer": "Alan Ferreira",
+        "status": "PENDENTE",
+        "date": "2024-10-09T19:21:33.400Z",
+        "cart": [
+            {
+                "name": "Ventilador turbo 5 velocidades",
+                "price": 10,
+                "amount": 1
+            },
+            {
+                "name": "Aspirador de pó vertical e portátil",
+                "price": 20,
+                "amount": 2
+            }
+        ],
+        "shipping": 30,
+        "subtotal": 50,
+        "total": 80
+    }
+]

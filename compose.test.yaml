@@ -1,5 +1,4 @@
 services:
-
   db:
     image: prismagraphql/mongo-single-replica:5.0.3
     container_name: mongodb

@@ -10,7 +10,7 @@ services:
       PORT: 8000
       DATABASE_URL: "mongodb://dev:pass123@db:27017/luizalabsdb?directConnection=true"
     networks:
-      - appnet
+      - app_network
 
   db:
     image: prismagraphql/mongo-single-replica:5.0.3
@@ -25,8 +25,15 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
-      - appnet
+      - app_network
+
+  mongo-seed:
+      build: ./mongo-seed.dockerfile
+      depends_on:
+        - db
+      networks:
+        - app_network
 
 networks:
-  appnet:
+  app_network:
     driver: bridge

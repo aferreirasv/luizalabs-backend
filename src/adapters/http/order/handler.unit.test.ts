@@ -65,7 +65,7 @@ describe('OrdersHandler', () => {
         })
 
         it('should return 404 not found for no order found', async () => {
-            const service = mockOrderService(() => mockOrder)
+            const service = mockOrderService(() => null)
             const handler = new OrderHandler(service as any)
             const server = new Server(handler)
             const res = await server.app.inject({
@@ -74,9 +74,22 @@ describe('OrdersHandler', () => {
             })
             expect(res.statusCode).toBe(404)
         })
-    })
-    describe('GET /orders', () => {
 
+        it('should return 500 internal server error for service error', async () => {
+            const service = mockOrderService(() => {
+                throw new Error('mock error')
+            })
+            const handler = new OrderHandler(service as any)
+            const server = new Server(handler)
+            const res = await server.app.inject({
+                method: 'GET',
+                url: `/orders/${mockOrder.id}`,
+            })
+            expect(res.statusCode).toBe(500)
+        })
+    })
+
+    describe('GET /orders', () => {
         it('should return a list with one order and status code 200 when given no page', async () => {
             const service = mockOrderService(() => mockOrder)
             const handler = new OrderHandler(service as any)

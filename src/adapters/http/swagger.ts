@@ -6,10 +6,12 @@ const swaggerOptions: HapiSwagger.RegisterOptions = {
       description: 'Orders API Documentation',
       version: '1.0',
     },
-    tags: [{
-        name: 'order',
-        description: 'Orders resource'
-    }],
+    tags: [
+        {
+            name: 'order',
+            description: 'Orders resource'
+        }
+    ],
     swaggerUI: true,
     documentationPage: true,
     documentationPath: '/docs'
