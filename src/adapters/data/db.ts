@@ -18,7 +18,7 @@ export default class DBClient {
             return res as Order
         }
         catch(e: any) {
-            return e
+            throw e
         }
     }
     
@@ -27,7 +27,7 @@ export default class DBClient {
             const res = await this.prisma.order.create({data: order as Prisma.OrderCreateInput})
             return res as Order
         } catch(e: any) {
-            return e
+            throw e
         }
     }
     
@@ -48,7 +48,7 @@ export default class DBClient {
         )
     } catch (e: any) {
         console.error(e)
-        return e
+        throw e
     }
     }
 
@@ -59,7 +59,7 @@ export default class DBClient {
         }
         catch(e: any) {
             console.error(e)
-            return e
+            throw e
         }
     }
 
@@ -69,7 +69,7 @@ export default class DBClient {
             const res = await this.prisma.order.update({where: {id: order.id}, data: payload})
             return res as Order
         } catch(e: any) {
-            return e
+            throw e
         }
     }
 }

@@ -1,0 +1,6 @@
+./dockerfile
+./mongo-seed.dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+/db

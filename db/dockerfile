@@ -1,0 +1,7 @@
+FROM mongo
+
+COPY ./mongo-seed.json /mongo-seed.json
+
+WORKDIR /
+
+CMD mongoimport --uri mongodb://dev:pass123@db:27017/luizalabsdb --collection Order --type json --file ./mongo-seed.json --jsonArray

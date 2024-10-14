@@ -21,6 +21,7 @@ export default class OrderService {
     createOrder(order: Order): Promise<Order> {
         try {
             this.checkPrices(order)
+            console.log("order",order)
             return this.repository.createOrder(order)
         } catch(e: any) {
             throw e

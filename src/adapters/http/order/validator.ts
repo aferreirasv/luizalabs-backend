@@ -1,5 +1,5 @@
 import Status from '../../../domain/order/status'
-import Joi from 'joi';
+import * as Joi from 'joi';
 
 export const uuidSchema = Joi.string().trim().required().length(24)
 
@@ -18,7 +18,7 @@ export const createOrderSchema =  Joi.object({
     status: statusSchema.default(Status.PENDENTE),
     cart: cartSchema,
     shipping: Joi.number().required(),
-    date: Joi.date().default(() => new Date()),
+    date: Joi.date().default(() => new Date().toISOString()).cast("string"),
     total: Joi.number(),
     subtotal: Joi.number(),
 })
@@ -29,7 +29,7 @@ export const putOrderSchema =  Joi.object({
     status: statusSchema.required(),
     cart: cartSchema,
     shipping: Joi.number().required(),
-    date: Joi.date().required(),
+    date: Joi.date().required().cast("string"),
     total: Joi.number().required(),
     subtotal: Joi.number().required(),
 });

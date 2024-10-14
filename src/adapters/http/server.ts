@@ -17,8 +17,8 @@ export default class Server {
             routes:{
                 cors: {
                     origin: ['*'],
-                    headers: ['Accept', 'Content-Type'],
-                    additionalHeaders: ['X-Requested-With']
+                    headers: ['Accept', 'Content-Type', 'Access-Control-Expose-Headers'],
+                    additionalHeaders: ['X-Requested-With','X-Total-Count'], 
                 }
             }
         })

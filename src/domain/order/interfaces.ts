@@ -4,7 +4,7 @@ export interface Order {
     id?: string
     customer: string
     status: Status
-    date: Date
+    date: string
     cart: Product[]
     subtotal?: number
     shipping: number

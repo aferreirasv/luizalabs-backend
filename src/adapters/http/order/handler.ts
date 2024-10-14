@@ -27,9 +27,9 @@ export default class OrderHandler {
         const amount = parseInt(request.query.amount) || 3
         const res = await this.service.listOrders(page,amount)
         if(res.orders.length == 0) {
-            return h.response().code(204)
+            return h.response(<ListOrdersResponse>res).code(204)
         }
-        return h.response(<ListOrdersResponse[]>res.orders).header('X-Total-Count', res.count.toString())
+        return h.response(<ListOrdersResponse>res)
     }
     
 
@@ -38,13 +38,12 @@ export default class OrderHandler {
         if (error) {
             return h.response({message: error.message}).code(400)
         }
-
         const order: Order = <Order>value
         try {
             const res = await this.service.createOrder(order)
             return h.response(<PostOrderResponse>res).code(201)
         } catch (e: any) {
-            console.error(e.message)
+            console.error(e)
             return h.response().code(500)
         }
     }

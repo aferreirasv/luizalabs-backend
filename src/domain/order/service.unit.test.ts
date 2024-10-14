@@ -9,7 +9,7 @@ const mockOrder = {
     'id': '6706d7bd2a51ec575894fb49',
     'customer': 'Alan Ferreira',
     'status': Status.PENDENTE,
-    'date': new Date('2024-10-09T19:21:33.400Z'),
+    'date': '2024-10-09T19:21:33.400Z',
     'cart': [
         {
             'name': 'Ventilador turbo 5 velocidades',
@@ -46,7 +46,7 @@ describe('getOrder', () => {
             expect(result.id).toBe(mockOrder.id)
             expect(result.customer).toBe('Alan Ferreira')
             expect(result.status).toBe(Status.PENDENTE)
-            expect(result.date.toISOString()).toBe('2024-10-09T19:21:33.400Z')
+            expect(result.date).toBe('2024-10-09T19:21:33.400Z')
             expect(result.cart).toHaveLength(2)
             expect(result.cart[0].name).toBe('Ventilador turbo 5 velocidades')
             expect(result.cart[0].price).toBe(10)
@@ -95,7 +95,7 @@ describe ('listOrder', () => {
             expect(orders[0].id).toBe(mockOrder.id)
             expect(orders[0].date).toBe(mockOrder.date)
             expect(orders[0].status).toBe(Status.PENDENTE)
-            expect(orders[0].date.toISOString()).toBe('2024-10-09T19:21:33.400Z')
+            expect(orders[0].date).toBe('2024-10-09T19:21:33.400Z')
             expect(orders[0].cart).toHaveLength(2)
             expect(orders[0].cart[0].name).toBe('Ventilador turbo 5 velocidades')
             expect(orders[0].cart[0].price).toBe(10)
@@ -143,7 +143,7 @@ describe ('createOrder', () => {
             expect(result.id).not.toBeNull()
             expect(result.customer).toBe('Alan Ferreira')
             expect(result.status).toBe(Status.PENDENTE)
-            expect(result.date.toISOString()).toBe('2024-10-09T19:21:33.400Z')
+            expect(result.date).toBe('2024-10-09T19:21:33.400Z')
             expect(result.cart).toHaveLength(2)
             expect(result.cart[0].name).toBe('Ventilador turbo 5 velocidades')
             expect(result.cart[0].price).toBe(10)
@@ -182,7 +182,7 @@ describe('putOrder', () => {
             expect(result.id).not.toBeNull()
             expect(result.customer).toBe('Alan Ferreira')
             expect(result.status).toBe(Status.PENDENTE)
-            expect(result.date.toISOString()).toBe('2024-10-09T19:21:33.400Z')
+            expect(result.date).toBe('2024-10-09T19:21:33.400Z')
             expect(result.cart).toHaveLength(2)
             expect(result.cart[0].name).toBe('Ventilador turbo 5 velocidades')
             expect(result.cart[0].price).toBe(10)
@@ -219,7 +219,7 @@ describe('deleteOrder', () => {
             expect(result.id).toBe(mockOrder.id)
             expect(result.customer).toBe('Alan Ferreira')
             expect(result.status).toBe(Status.PENDENTE)
-            expect(result.date.toISOString()).toBe('2024-10-09T19:21:33.400Z')
+            expect(result.date).toBe('2024-10-09T19:21:33.400Z')
             expect(result.cart).toHaveLength(2)
             expect(result.cart[0].name).toBe('Ventilador turbo 5 velocidades')
             expect(result.cart[0].price).toBe(10)

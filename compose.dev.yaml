@@ -23,12 +23,13 @@ services:
       MONGO_INITDB_DATABASE: luizalabsdb
       INIT_WAIT_SEC: 3
     volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - app_network
 
   mongo-seed:
-      build: ./mongo-seed.dockerfile
+      build:
+        context: ./db/
       depends_on:
         - db
       networks:

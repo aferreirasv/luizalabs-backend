@@ -5,7 +5,7 @@ interface PostOrderResponse {
     id: string
     customer: string
     status: Status
-    date: Date
+    date: string
     cart: Product[]
     shipping: number
     subtotal: number
@@ -16,7 +16,7 @@ interface GetOrderResponse {
     id: string
     customer: string
     status: Status
-    date: Date
+    date: string
     cart: Product[]
     shipping: number
     subtotal: number
@@ -27,7 +27,18 @@ interface PutOrderResponse {
     id: string
     customer: string
     status: Status
-    date: Date
+    date: string
+    cart: Product[]
+    shipping: number
+    subtotal: number
+    total: number
+}
+
+interface ListOrdersResponseItem {
+    id: string
+    customer: string
+    status: Status
+    date: string
     cart: Product[]
     shipping: number
     subtotal: number
@@ -35,14 +46,9 @@ interface PutOrderResponse {
 }
 
 interface ListOrdersResponse {
-    id: string
-    customer: string
-    status: Status
-    date: Date
-    cart: Product[]
-    shipping: number
-    subtotal: number
-    total: number
+    count: number
+    orders: ListOrdersResponseItem[]
 }
+
 
 export {ListOrdersResponse, GetOrderResponse, PostOrderResponse, PutOrderResponse}

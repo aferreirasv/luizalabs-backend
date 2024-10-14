@@ -4,9 +4,10 @@
   "description": "Backend para desafio técnico da Luizalabs",
   "main": "app.ts",
   "scripts": {
-    "start": "node build/app.js",
+    "start": "ts-node src/app.ts",
     "dev": "nodemon src/app.ts",
     "build": "tsc src/app.ts",
+    "prd": "node build/app.js",
     "test-unit": "jest unit",
     "test-int": "jest int",
     "test": "jest"
