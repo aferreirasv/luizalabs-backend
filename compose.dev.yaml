@@ -1,0 +1,40 @@
+services:
+  web:
+    build: .
+    container_name: luizalabs-backend
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      PORT: 8000
+      DATABASE_URL: "mongodb://dev:pass123@db:27017/luizalabsdb?directConnection=true"
+    networks:
+      - app_network
+
+  db:
+    image: prismagraphql/mongo-single-replica:5.0.3
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: prisma
+      MONGO_INITDB_DATABASE: luizalabsdb
+      INIT_WAIT_SEC: 3
+    volumes:
+      - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - app_network
+
+  mongo-seed:
+      build:
+        context: ./db/
+      depends_on:
+        - db
+      networks:
+        - app_network
+
+networks:
+  app_network:
+    driver: bridge

@@ -1,55 +1,75 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import Order from '../../domain/order'
+import {Order,Orders} from '../../domain/order/interfaces'
 
-export default class Client {
+export default class DBClient {
+    
+    prisma: PrismaClient
+    
+    constructor() {
+        this.prisma = new PrismaClient()
+    }
 
-    prisma: PrismaClient = new PrismaClient()
-
-    async getOrder() : Promise<Order | null> {
-
-
-        return this.prisma.order.findFirst().then(
-            res => {
-                if (res == null) {
-                    return null
-                }
-                return new Order(res.id, res.customer, res.status, res.date, res.cart, res.subtotal, res.shipping, res.total)
+    async getOrder(id: string) : Promise<Order | null> {
+        try{
+            
+            const res = await this.prisma.order.findUnique({
+                where: {id: id}
+            })
+            return res as Order
+        }
+        catch(e: any) {
+            throw e
+        }
+    }
+    
+    async createOrder(order: Order): Promise<Order> {
+        try{
+            const res = await this.prisma.order.create({data: order as Prisma.OrderCreateInput})
+            return res as Order
+        } catch(e: any) {
+            throw e
+        }
+    }
+    
+    async listOrders(page: number, amount: number): Promise<Orders> {
+        try {
+            const [orders, count] = await this.prisma.$transaction([
+                this.prisma.order.findMany({
+                    skip: ((page - 1) * amount), 
+                    take: amount
+                }),
+                this.prisma.order.count()
+            ]);
+            
+            return <Orders>({
+                count: count,
+                orders: orders.map((order: any) =>  <Order>order)
             }
         )
+    } catch (e: any) {
+        console.error(e)
+        throw e
+    }
     }
 
-    async createOrder(order: Order): Promise<Order> {
-        return order
+    async deleteOrder(order: string): Promise<Order> {
+        try {
+            const res = await this.prisma.order.delete({ where: { id: order } })
+            return res as unknown as Order
+        }
+        catch(e: any) {
+            console.error(e)
+            throw e
+        }
     }
 
-    async listOrders(): Promise<Order[]> {
-
-        return new Array<Order>()
+    async putOrder(order: Order) : Promise<Order>{ 
+        try{
+            const {['id']: _,...payload} = order
+            const res = await this.prisma.order.update({where: {id: order.id}, data: payload})
+            return res as Order
+        } catch(e: any) {
+            throw e
+        }
     }
-
 }
-
-
-    // await prisma.order.create({
-    //     data: {
-    //       id: '1',
-    //       customer: 'Alan Ferreira',
-    //       status: 'pendente',
-    //       date: '2024-10-07',
-    //       cart: [
-    //         {
-    //             name: 'Aspirador de Pó Vertical e Portátil',
-    //             price: 180.90,
-    //             amount: 3
-    //         },
-    //         {
-    //             name: 'Ventilador Turbo 5 Velocidades',
-    //             price: 499.90,
-    //             amount: 1
-    //         }
-    //       ],
-    //       subtotal: 1042.60,
-    //       shipping: 40,
-    //       total: 1082.60
-    //     },
-    //   })

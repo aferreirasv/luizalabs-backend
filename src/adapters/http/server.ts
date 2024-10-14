@@ -1,66 +1,51 @@
 import * as Hapi  from '@hapi/hapi'
-
-import OrderRouter from './order/router'
+import OrderRouter from './order/router'    
 import OrderHandler from './order/handler'
-
-import Service from '../../domain/service'
-
+import OrderService from '../../domain/order/service'
+import * as HapiSwagger from 'hapi-swagger'
+import plugins from './plugins'
 
 export default class Server {
+    orderHandler: OrderHandler
+    orderRouter: OrderRouter
+    app: Hapi.Server<Hapi.ServerApplicationState>
     
-    service: Service
-    server: Hapi.Server<Hapi.ServerApplicationState>
-
-    constructor(service : Service) {
-        this.service = service
-        this.server = Hapi.server({
-            port: 8000,
-            host: "localhost"
+    constructor(orderHandler: OrderHandler) {
+        this.orderHandler = orderHandler
+        this.orderRouter = new OrderRouter()
+        this.app = Hapi.server({
+            routes:{
+                cors: {
+                    origin: ['*'],
+                    headers: ['Accept', 'Content-Type', 'Access-Control-Expose-Headers'],
+                    additionalHeaders: ['X-Requested-With','X-Total-Count'], 
+                }
+            }
         })
-    }  
-
-    async init() {
-        console.log({this: this, getOrder: this.getOrder})
-        this.server.ext('onRequest', (request, h) => {
+        this.app.route(this.orderRouter.getRoutes(this.orderHandler))
+        this.app.ext('onRequest', (request, h) => {
             console.log(`${request.method.toUpperCase()} ${request.path}`)
             return h.continue
         })
-    
-        this.server.route({
-            method: "GET",
-            path: "/orders/{id}",
-            handler: this.getOrder.bind(this)
-        },
-        // {
-        //     method: "GET",
-        //     path: "/orders",
-        //     handler: handler.listOrders
-        // }
-    )
         
-        await this.server.start()
-        console.log("Server running on %s", this.server.info.uri)
     }
 
-    async getOrder(request: Hapi.Request, h: Hapi.ResponseToolkit): Promise<Hapi.ResponseObject> {
-        console.log(request.params)
+    async registerPlugins() {
+        return this.app.register(plugins)
+    }
+    
+    async listen(port: string | number, host?: string) {
+        this.app.settings.host = host || '0.0.0.0'
+        this.app.settings.port = port
+        
         try {
-            const res = await this.service.getOrder(request.params.id)
-            if(res == null){
-                console.log("Not Found")
-                return h.response().code(404)
-            }
-            return h.response(res)
-        } catch(e: any) {
-            console.error(e)
-            return h.response(e).code(500)
+            await this.registerPlugins()
+        } catch (e) {
+            console.error('Failed registering plugins: ', e)
         }
         
+        await this.app.start()
+        console.log('Server running on %s', this.app.info.uri) 
     }
-
+    
 }
-
-process.on('unhandleRejection', (err) => {
-    console.log(err)
-    process.exit(1)
-})

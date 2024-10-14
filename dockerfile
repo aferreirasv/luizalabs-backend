@@ -1,4 +1,4 @@
-FROM node:lts-slim
+FROM node:lts
 
 ENV workdir /data/app
 
@@ -8,6 +8,8 @@ WORKDIR ${workdir}
 
 COPY . ${workdir}
 
-RUN npm install
+RUN npx prisma generate
+
+RUN npm run build
 
 CMD ["npm", "start"]
